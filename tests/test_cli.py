@@ -35,7 +35,6 @@ def test_usage_error_raised():
 
 def test_fts_search_enabled(tmp_path):
     db_path = tmp_path / "testfts.db"
-    print(str(db_path))
     result = runner.invoke(app, [str(db_path), "--enable-fts"])
     assert result.exit_code == 0
     assert db_path.exists()
