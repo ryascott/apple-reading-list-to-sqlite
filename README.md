@@ -4,7 +4,7 @@ Export Apple Reading List to SQLite
 
 ## Install
     
-        $ pip install apple-reading-list-to-sqlite
+        
 
 ## Usage
     
