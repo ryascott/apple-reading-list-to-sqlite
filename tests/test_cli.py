@@ -1,6 +1,3 @@
-import pathlib
-
-import pytest
 from typer.testing import CliRunner
 
 from sqlite_utils import Database
@@ -40,4 +37,4 @@ def test_fts_search_enabled(tmp_path):
     assert db_path.exists()
     assert db_path.stat().st_size > 0
     db = Database(db_path)
-    assert db["reading_list"].detect_fts() == 'reading_list_fts'
+    assert db["reading_list"].detect_fts() == "reading_list_fts"
