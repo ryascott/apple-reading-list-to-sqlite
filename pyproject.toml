@@ -22,3 +22,8 @@ pre-commit = "^3.2.2"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+markers = [
+    "macos: marks tests as only on macos (deselect with '-m \"not macos\"')",
+]

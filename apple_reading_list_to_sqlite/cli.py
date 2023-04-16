@@ -6,7 +6,6 @@ from typing import Optional
 
 import click
 import httpx
-import rich.pretty
 import typer
 from rich.progress import track
 from sqlite_utils import Database
@@ -31,7 +30,8 @@ def cli(
         )
 
     if dump:
-        for list_item in extract_list(SAFARI_BOOKMARKS_PLIST, fetch_content):
+        file_contents = extract_file_contents(SAFARI_BOOKMARKS_PLIST)
+        for list_item in process_file_contents(file_contents, fetch_content):
             typer.echo(json.dumps(list_item, indent=4, sort_keys=True, default=str))
 
     else:
@@ -49,9 +49,10 @@ def cli(
                 pk="id",
             )
 
-        reading_list = extract_list(SAFARI_BOOKMARKS_PLIST, fetch_content)
+        file_contents = extract_file_contents(SAFARI_BOOKMARKS_PLIST)
+        reading_list = process_file_contents(file_contents, fetch_content)
         total = 0
-        for value in track(reading_list, description="Processing..."):
+        for value in track(reading_list, description="Inserting Into Database.."):
             db["reading_list"].upsert(
                 value, hash_id_columns=["url", "title", "date_added"]
             )
@@ -65,30 +66,43 @@ def cli(
         typer.echo(f"Processed {total} items")
 
 
-def extract_list(file_path: str, fetch_content: bool = False):
-    readling_list_file = pathlib.Path(f"{file_path}").expanduser().absolute()
+def extract_file_contents(file_path: pathlib.Path) -> dict:
+    """
+    Extract the contents of the plist file and return a dictionary
+    :param file_path: The path of the file with the filename included to extract
+    :return: A dictionary of the contents of the plist file
+    """
+
+    reading_list_file = pathlib.Path(f"{file_path}").expanduser().absolute()
     try:
-        with open(readling_list_file, "rb") as plist_file:
+        with open(reading_list_file, "rb") as plist_file:
             plist = plistlib.load(plist_file)
     except FileNotFoundError:
         raise click.UsageError(
             f"Could not find Reading File List at file at {file_path}"
         )
+    return plist
 
-    return process_reading_list(fetch_content, plist)
 
+def process_file_contents(file_contents: dict, fetch_content: bool) -> list[dict]:
+    """
+    Process the contents of the plist file and return a list of dictionaries
 
-def process_reading_list(fetch_content: bool, plist):
+    :param file_contents: The contents of the plist file as a dictionary
+    :param fetch_content: Retrieve the content of the URL of the list item
+    :return:
+    """
+
     bookmarks = [
         child["Children"]
-        for child in plist["Children"]
+        for child in file_contents["Children"]
         if "com.apple.ReadingList" in child["Title"]
     ][0]
     reading_list = []
-    for bookmark in bookmarks:
+    for bookmark in track(bookmarks, "Processing File Contents..."):
         url = bookmark["URLString"]
         text = bookmark["ReadingList"].get("PreviewText", "")
-        date_added = bookmark["ReadingList"].get("DateAdded", "")
+        date_added = bookmark["ReadingList"].get("DateAdded", None)
         title = bookmark["URIDictionary"]["title"]
         content = None
         if fetch_content:
