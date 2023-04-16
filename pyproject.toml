@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "apple-reading-list-to-sqlite"
-version = "0.1.0"
+version = "0.2.2"
 description = "Export Apple Reading List to SQLite"
 authors = ["ryanscott <ryscott@gmail.com>"]
 readme = "README.md"

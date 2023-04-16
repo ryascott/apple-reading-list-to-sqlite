@@ -4,24 +4,24 @@ Export Apple Reading List to SQLite
 
 ## Install
 
-    $pip install apple-reading-list-to-sqlite
+    $ pip install apple-reading-list-to-sqlite
 
 ## Usage
 
-            $ apple-reading-list-to-sqlite --help
-            Usage: apple-reading-list-to-sqlite [OPTIONS] [DB_PATH]
+    $ apple-reading-list-to-sqlite --help
+      Usage: apple-reading-list-to-sqlite [OPTIONS] [DB_PATH]
 
-            Export Apple Reading List to SQLite
+      Export Apple Reading List to SQLite
 
-            Arguments:
-            [DB_PATH]  Path to the SQLite database file.
+      Arguments:
+      [DB_PATH]  Path to the SQLite database file.
 
-            Options:
-            --version  Show the version and exit.
-            --help     Show this message and exit.
-            --fetch-content / --no-fetch-content try and retrive the content of the article
-            --dump / --no-dump Dump the reading list to stdout
-            --enable-fts / --no-enable-fts Enable full text search
+      Options:
+        --version  Show the version and exit.
+        --help     Show this message and exit.
+        --fetch-content / --no-fetch-content try and retrive the content of the article
+        --dump / --no-dump Dump the reading list to stdout
+        --enable-fts / --no-enable-fts Enable full text search
 
 ## Testing
 
