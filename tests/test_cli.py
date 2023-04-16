@@ -1,6 +1,5 @@
-from typer.testing import CliRunner
-
 from sqlite_utils import Database
+from typer.testing import CliRunner
 
 from apple_reading_list_to_sqlite.cli import app
 
